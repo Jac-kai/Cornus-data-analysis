@@ -1387,67 +1387,100 @@ class ClarityCore:
         """
         Replace specified values in the working dataset.
 
-        This method replaces occurrences of `to_replace` with `value` either across
-        the entire DataFrame or within selected columns. It supports common data
-        cleaning tasks such as converting sentinel strings into missing values or
-        standardizing categorical values.
+        This method replaces occurrences of ``to_replace`` with ``value`` either
+        across the entire DataFrame or within selected columns. It supports common
+        data-cleaning tasks such as converting sentinel strings into missing values,
+        standardizing categorical values, and collapsing multiple raw labels into a
+        single normalized value.
 
         Parameters
         ----------
         to_replace : Any
-            Value or collection of values to replace. Must not be `None`.
+            Value or collection of values to replace. Must not be ``None``.
+
+            Supported forms typically include:
+
+            - scalar values such as ``"N/A"`` or ``0``
+            - iterable collections such as ``list``, ``tuple``, or ``set`` for
+            many-to-one replacement
+            - dictionary-style mappings supported by ``pandas.DataFrame.replace()``
+
         value : Any
-            Replacement value to assign wherever `to_replace` is found.
+            Replacement value assigned wherever ``to_replace`` is matched.
+
+            In common one-to-one and many-to-one workflows, this is a single target
+            value such as ``"missing"``, ``"unknown"``, or ``pd.NA``.
         target_columns : list[str], optional
-            Column names to apply replacement to. If `None`, replacement is applied
-            across the full DataFrame.
+            Column names to apply replacement to. If ``None``, replacement is
+            applied across the full DataFrame.
         inplace : bool, default=False
-            If `True`, update `self.cleaned_data` with the cleaned result.
-            If `False`, return a cleaned preview without modifying the class state.
+            If ``True``, update ``self.cleaned_data`` with the cleaned result.
+            If ``False``, return a cleaned preview without modifying the class
+            state.
 
         Returns
         -------
         pandas.DataFrame or None
-            Cleaned DataFrame with replaced values, or `None` if validation fails
-            or parameters are invalid.
+            Cleaned DataFrame with replaced values, or ``None`` if validation
+            fails or parameters are invalid.
 
         Behavior
         --------
         - Validates the working dataset
-        - Validates `to_replace`
-        - Optionally validates `target_columns`
+        - Validates ``to_replace``
+        - Optionally validates ``target_columns``
         - Copies the working dataset
-        - Applies pandas `replace()` either globally or on selected columns
+        - Applies pandas ``replace()`` either globally or on selected columns
         - Estimates how many cells changed during replacement
-        - Records the action in `cleaning_history`
-        - Either updates `self.cleaned_data` or returns a preview copy
-        - When `inplace=True`, the updated cleaned dataset may also be saved as a
-        CSV file under `Cleaned_Dataset`
+        - Records the action in ``cleaning_history``
+        - Either updates ``self.cleaned_data`` or returns a preview copy
+        - When ``inplace=True``, the updated cleaned dataset may also be saved as a
+        CSV file under ``Cleaned_Dataset``
+
+        Changed-Cell Counting
+        ---------------------
+        The method uses slightly different counting strategies depending on the
+        replacement pattern:
+
+        - When replacing across the full DataFrame with non-dictionary
+        ``to_replace``, the method estimates changed cells by comparing the number
+        of matched target values before and after replacement.
+        - When ``to_replace`` is dictionary-like, the method estimates changed cells
+        by directly comparing the pre-replacement and post-replacement DataFrames.
+        - When ``target_columns`` is specified, the method compares the selected
+        subset before and after replacement to count changed cells.
 
         History Details
         ---------------
         The recorded history entry includes:
-        - `target_columns`
-        - `to_replace`
-        - `value`
-        - `changed_cells`
-        - `inplace`
+        - ``target_columns``
+        - ``to_replace``
+        - ``value``
+        - ``changed_cells``
+        - ``inplace``
 
         Side Effects
         ------------
-        May update `self.cleaned_data`, append a history record, save the updated
-        cleaned dataset to disk when `inplace=True`, and print preview or update
+        May update ``self.cleaned_data``, append a history record, save the updated
+        cleaned dataset to disk when ``inplace=True``, and print preview or update
         messages.
 
         Notes
         -----
         This method is useful for:
-        - replacing fake missing-value markers such as `"unknown"` or `"N/A"`
+        - replacing fake missing-value markers such as ``"unknown"``, ``"N/A"``, or
+        ``"na"``
         - normalizing categorical values
         - converting placeholder codes into meaningful values
+        - performing many-to-one replacement such as
+        ``["N/A", "na", "unknown"] -> "missing"``
 
-        Depending on `to_replace`, pandas replacement behavior may vary for scalar,
-        iterable, or dictionary-style replacement patterns.
+        Depending on ``to_replace``, pandas replacement behavior may vary for
+        scalar, iterable, or dictionary-style replacement patterns.
+
+        In the current terminal workflow, the menu layer may pass comma-separated
+        user input through ``input_list()``, which typically arrives here as a
+        ``list[str]`` for many-to-one replacement.
         """
         if not self._validation():
             return None

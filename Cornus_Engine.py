@@ -541,9 +541,9 @@ class CornusEngine:
         Dispatch cleaning and preprocessing actions to `ClarityCore`.
 
         This method acts as the engine-level interface for cleaning operations. It
-        validates that the cleaning core is available, forwards the requested action
-        and parameters to the matching `ClarityCore` method, and refreshes downstream
-        cores when an inplace update succeeds.
+        validates that the cleaning core is available, forwards the requested
+        action and parameters to the matching `ClarityCore` method, and refreshes
+        downstream cores when an inplace update succeeds.
 
         Parameters
         ----------
@@ -562,16 +562,30 @@ class CornusEngine:
         **kwargs
             Additional keyword arguments forwarded to the selected cleaning method.
 
+            Common forwarded arguments may include:
+
+            - ``target_index``
+            - ``target_columns``
+            - ``drop_values``
+            - ``how``
+            - ``subset``
+            - ``keep``
+            - ``fill_value``
+            - ``to_replace``
+            - ``value``
+            - ``inplace``
+
         Returns
         -------
         Any
-            Result returned by the corresponding `ClarityCore` method, or `None` if the
-            cleaning core is unavailable or the action is unsupported.
+            Result returned by the corresponding `ClarityCore` method, or ``None``
+            if the cleaning core is unavailable or the action is unsupported.
 
         Side Effects
         ------------
-        If the cleaning action succeeds and ``inplace=True`` is specified, dependent
-        downstream cores are refreshed through `self.refresh_downstream_cores()`.
+        If the cleaning action succeeds and ``inplace=True`` is specified,
+        dependent downstream cores are refreshed through
+        `self.refresh_downstream_cores()`.
 
         Supported Actions
         -----------------
@@ -592,14 +606,20 @@ class CornusEngine:
         ``"strip_string_values"``
             Strip leading and trailing whitespace from string columns.
         ``"replace_values"``
-            Replace values within selected columns.
+            Replace one or more values within selected columns or across the full
+            DataFrame.
 
         Notes
         -----
         - This method centralizes cleaning access for terminal menus or higher-level
         workflow controllers.
         - Refreshing downstream cores is necessary because computation,
-        transformation-view, and plotting services depend on the latest cleaned data.
+        transformation-view, and plotting services depend on the latest cleaned
+        data.
+        - For ``"replace_values"``, ``to_replace`` is forwarded without forced type
+        conversion and may be a scalar value, a collection such as ``list``,
+        ``tuple``, or ``set``, or another pandas-compatible replacement object
+        supported by `ClarityCore.replace_values_core()`.
         """
         if self.clarity_core is None:
             logger.warning("clarity_data() called before clarity_core initialization")

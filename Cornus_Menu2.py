@@ -277,17 +277,17 @@ def clarity_data_menu(cornus: CornusEngine):
     """
     Interactive menu controller for ClarityCore-related cleaning operations.
 
-    This menu provides a terminal-based interface for inspecting pre-cleaning report
-    information and executing the main cleaning services exposed through
+    This menu provides a terminal-based interface for inspecting pre-cleaning
+    report information and executing the main cleaning services exposed through
     ``CornusEngine``. The user can choose a cleaning action, optionally select
-    target rows or columns, configure action-specific parameters, and decide whether
-    the result should be applied inplace or returned as a preview only.
+    target rows or columns, configure action-specific parameters, and decide
+    whether the result should be applied inplace or returned as a preview only.
 
     Menu Options
     ------------
     1. ``view_data_before_cleaning``
-        Display available pre-cleaning report information, such as the null-related
-        report prepared upstream by the inspection layer.
+        Display available pre-cleaning report information, such as the
+        null-related report prepared upstream by the inspection layer.
     2. ``drop_rows``
         Remove selected rows by index label.
     3. ``drop_columns``
@@ -296,14 +296,14 @@ def clarity_data_menu(cornus: CornusEngine):
         Remove rows containing missing values, optionally limited to selected
         columns and a chosen ``how`` mode.
     5. ``drop_duplicates``
-        Remove duplicate rows, optionally using selected subset columns and a chosen
-        keep mode.
+        Remove duplicate rows, optionally using selected subset columns and a
+        chosen keep mode.
     6. ``fill_values``
         Fill missing values with a user-provided fixed value, either across all
         columns or within selected columns.
     7. ``replace_values``
-        Replace specified values with a new value, either across all columns or
-        within selected columns.
+        Replace one or more specified values with a new value, either across all
+        columns or within selected columns.
     8. ``strip_string_values``
         Strip surrounding whitespace from string-like values, either across
         automatically selected string columns or within selected columns.
@@ -320,71 +320,79 @@ def clarity_data_menu(cornus: CornusEngine):
     Returns
     -------
     None
-        This function acts as an interactive menu loop and does not return cleaned
-        data directly. Cleaning results and previews are handled by the downstream
-        engine/core methods that are called from the selected menu branch.
+        This function acts as an interactive menu loop and does not return
+        cleaned data directly. Cleaning results and previews are handled by the
+        downstream engine/core methods that are called from the selected menu
+        branch.
 
     Workflow
     --------
     1. Display the available clarity-related operations.
     2. Read and validate the user's menu choice.
     3. Resolve the selected action name from the menu mapping.
-    4. For actions that require additional input, collect parameters through helper
-    functions such as:
+    4. For actions that require additional input, collect parameters through
+       helper functions such as:
 
-    - ``_select_target_index()``
-    - ``_select_target_columns()``
-    - ``_select_inplace()``
-    - ``_select_dropna_how()``
-    - ``_select_keep_mode()``
-    - ``_input_text_value()``
+       - ``_select_target_index()``
+       - ``_select_target_columns()``
+       - ``select_inplace()``
+       - ``_select_dropna_how()``
+       - ``_select_keep_mode()``
+       - ``input_text_value()``
+       - ``input_list()``
 
     5. Call the corresponding ``CornusEngine`` method:
 
-    - ``cornus.view_data_before_cleaning()`` for report viewing
-    - ``cornus.clarity_data(...)`` for cleaning actions
+       - ``cornus.view_data_before_cleaning()`` for report viewing
+       - ``cornus.clarity_data(...)`` for cleaning actions
 
     6. Continue looping until the user chooses to go back to the main menu.
 
     Behavior by Action
     ------------------
     - ``view_data_before_cleaning``
-    Calls ``cornus.view_data_before_cleaning()`` to display any available
-    pre-cleaning report information.
+      Calls ``cornus.view_data_before_cleaning()`` to display any available
+      pre-cleaning report information.
     - ``drop_rows``
-    Requests target index labels and inplace mode.
+      Requests target index labels and inplace mode.
     - ``drop_columns``
-    Requests target columns and inplace mode.
+      Requests target columns and inplace mode.
     - ``drop_missing_values``
-    Optionally requests target columns, then requests a missing-value dropping
-    mode and inplace mode.
+      Optionally requests target columns, then requests a missing-value dropping
+      mode and inplace mode.
     - ``drop_duplicates``
-    Optionally requests subset columns, then requests a duplicate keep mode and
-    inplace mode.
+      Optionally requests subset columns, then requests a duplicate keep mode
+      and inplace mode.
     - ``fill_values``
-    Optionally requests target columns, then requests a fill value and inplace
-    mode.
+      Optionally requests target columns, then requests a fill value and
+      inplace mode.
     - ``replace_values``
-    Optionally requests target columns, then requests the value to replace, the
-    replacement value, and inplace mode.
+      Optionally requests target columns, then requests one or more values to
+      replace through ``input_list()`` and one new replacement value through
+      ``input_text_value()``. Comma-separated multi-value input is supported for
+      many-to-one replacement workflows.
     - ``strip_string_values``
-    Optionally requests target columns, then requests inplace mode.
+      Optionally requests target columns, then requests inplace mode.
 
     Error Handling
     --------------
     - Invalid menu choices are rejected and the menu is shown again.
     - Unsupported action names are reported explicitly.
-    - Any exception raised during report viewing or cleaning execution is caught and
-    printed without terminating the overall menu loop.
+    - Any exception raised during report viewing or cleaning execution is caught
+      and printed without terminating the overall menu loop.
 
     Notes
     -----
     - This menu assumes the relevant engine/core objects have already been
-    initialized, typically after data upload.
-    - For actions that inspect or clean the current working dataset, the menu uses
-    ``cornus.cleaned_data`` as the current data source for index/column selection.
+      initialized, typically after data upload.
+    - For actions that inspect or clean the current working dataset, the menu
+      uses ``cornus.cleaned_data`` as the current data source for index/column
+      selection.
+    - In the current design, ``replace_values`` supports one-to-one and
+      many-to-one replacement input through comma-separated list parsing at the
+      menu layer.
     - The decorator ``@menu_wrapper("Clarity Data Menu")`` is used to provide a
-    consistent menu-style user interface.
+      consistent menu-style user interface.
     """
     logger.info("Entered clarity_data_menu")
     while True:
@@ -593,8 +601,10 @@ def clarity_data_menu(cornus: CornusEngine):
                     if target_columns == "__BACK__":
                         continue
 
-                to_replace = input_text_value("🕯️ Enter value to replace")
-                if to_replace is None:
+                to_replace = input_list("🕯️ Enter value(s) to replace")
+                if to_replace == "__BACK__":
+                    continue
+                if not to_replace:
                     continue
 
                 new_value = input_text_value("🕯️ Enter new value")
