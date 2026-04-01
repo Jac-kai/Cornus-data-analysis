@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+Cornus_Logs/
+.venv/
+.env
+.idea/
+.vscode/
+
+Clarify_Report/
+Compution_Record/
+Compution_Report/
+Full_data_Report/
+Summary_Report/
+Transform_View/
+Features_Plot/
