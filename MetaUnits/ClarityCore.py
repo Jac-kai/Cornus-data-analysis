@@ -964,6 +964,7 @@ class ClarityCore:
         if not self._validation():
             return None
 
+        # ---------- Dropping mode (how) ----------
         how = how.lower().strip()
         if how not in ["any", "all"]:
             print("⚠️ how must be 'any' or 'all' ‼️")
@@ -982,7 +983,7 @@ class ClarityCore:
         if target_columns is None:
             cleaning_data = self.cleaned_data.dropna(how=how).copy()  # All columns
         else:
-            cleaning_data = self.cleaned_data.dropna(
+            cleaning_data = self.cleaned_data.dropna( # Certain columns
                 subset=target_columns, how=how
             ).copy()  # Selected columns
 
@@ -1083,6 +1084,7 @@ class ClarityCore:
         if not self._validation():
             return None
 
+        # ---------- Remain modes ----------
         keep = keep.lower().strip()
         if keep not in ["first", "last", "false"]:
             print("⚠️ keep must be 'first', 'last', or 'false' ‼️")
@@ -1208,10 +1210,10 @@ class ClarityCore:
                 print(f"⚠️ Columns not found: {missing_cols} ‼️")
                 return None
 
-            # ---------- Filling values for selected columns ----------
+            # ---------- Fill values for selected columns ----------
             cleaning_data = self.cleaned_data.copy()
             before_missing = cleaning_data[target_columns].isna().sum().sum()
-            cleaning_data[target_columns] = cleaning_data[target_columns].fillna(
+            cleaning_data[target_columns] = cleaning_data[target_columns].fillna( # Fill value to certain columns
                 fill_value
             )
             after_missing = cleaning_data[target_columns].isna().sum().sum()
@@ -1316,7 +1318,7 @@ class ClarityCore:
         # ---------- Auto select string-like columns ----------
         if target_columns is None:
             target_columns = self.cleaned_data.select_dtypes(
-                include=["object", "string"]
+                include=["object", "string"] # Filter "object-" and "string-" type column
             ).columns.tolist()
 
             # ---------- Check string-like columns in all data ----------
