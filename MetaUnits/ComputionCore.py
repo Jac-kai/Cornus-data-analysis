@@ -10,10 +10,9 @@ from Cornus.MetaUnits.ClarityCore import ClarityCore
 BASED_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CSV_DIR = os.path.join(BASED_PATH, "Compution_Record")
 COMPUTED_DIR = os.path.join(BASED_PATH, "Compution_Report")
+
 os.makedirs(CSV_DIR, exist_ok=True)
 os.makedirs(COMPUTED_DIR, exist_ok=True)
-
-
 # -------------------- ComputionCore --------------------
 class ComputionCore:
     """
