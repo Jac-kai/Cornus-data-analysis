@@ -525,7 +525,7 @@ class ClarityCore:
 
         # ---------- Build condition mask ----------
         if target_columns is None:
-            row_mask = self.cleaned_data.isin(drop_values).any(axis=1)
+            row_mask = self.cleaned_data.isin(drop_values).any(axis=1) # Check dropped value in each row direction
         else:
             # ---------- Check missing columns ----------
             missing_cols = [
