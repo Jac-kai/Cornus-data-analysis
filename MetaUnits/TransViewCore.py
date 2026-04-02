@@ -8,9 +8,8 @@ from Cornus.MetaUnits.ClarityCore import ClarityCore
 
 BASED_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 CSV_DIR = os.path.join(BASED_PATH, "Transform_View")
+
 os.makedirs(CSV_DIR, exist_ok=True)
-
-
 # -------------------- TransViewCore --------------------
 class TransViewCore:
     """
@@ -138,6 +137,7 @@ class TransViewCore:
         self.clarity_core = clarity_core  # ClarityCore object
 
         self.source_data = hunter_core.target_data  # HuntingDataCore loaded target data
+
         self.cleaned_data = clarity_core.cleaned_data  # ClarityCore cleaned data
         self.transview_data = None
         self.trans_view_report: dict = None  # Record transformed view report
