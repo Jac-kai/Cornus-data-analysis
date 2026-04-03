@@ -1,4 +1,6 @@
-# Cornus Data Analysis
+# Cornus-Data-Analysis
+
+A modular Python-based data preprocessing and exploratory data analysis system for tabular datasets.
 
 ## Project Overview
 Cornus is a Python-based data preprocessing and exploratory data analysis project designed to prepare tabular datasets before machine learning modeling.
@@ -71,7 +73,7 @@ Handles exploratory plotting and trend inspection, including:
 
 ## Project Structure
 ```text
-Cornus-data-analysis/
+Cornus-Data-Analysis/
 ├─ Cornus_Engine.py
 ├─ Cornus_Main.py
 ├─ Cornus_Menu1.py
@@ -79,7 +81,76 @@ Cornus-data-analysis/
 ├─ Cornus_Menu3.py
 ├─ Cornus_Menu4.py
 ├─ Cornus_Menu5.py
-├─ Curnus_Logging.py
+├─ Cornus_Logging.py
 ├─ Menu_Helper_Decorator.py
 ├─ Data_Hunter/
 └─ MetaUnits/
+```
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/your-username/Cornus-Data-Analysis.git
+cd Cornus-Data-Analysis
+```
+
+Create a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+Activate the virtual environment:
+
+### Windows
+```bash
+.venv\Scripts\activate
+```
+
+### macOS / Linux
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## How to Run
+
+Run the main program:
+
+```bash
+python Cornus_Main.py
+```
+
+Then follow the terminal menu to perform data preprocessing and exploratory data analysis tasks.
+
+## Project Goals
+This project was built to:
+
+- practice data preprocessing and exploratory data analysis workflows
+- improve Python project structuring skills
+- build a reusable modular analysis system
+- strengthen machine learning preparation skills before model training
+
+## Future Improvements
+Possible future extensions include:
+
+- adding more data-cleaning strategies
+- supporting more visualization options
+- exporting analysis reports automatically
+- improving database integration workflows
+- adding example datasets and screenshots
+- extending preprocessing support for larger datasets
+
+## Author
+**Zack**  
+GitHub: [Jac-kai](https://github.com/Jac-kai)
+
+## License
+This project is for learning, portfolio, and demonstration purposes.
