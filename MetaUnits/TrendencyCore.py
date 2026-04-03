@@ -13,6 +13,8 @@ BASED_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 PLOT_DIR = os.path.join(BASED_PATH, "Features_Plot")
 
 os.makedirs(PLOT_DIR, exist_ok=True)
+
+
 # -------------------- TrendencyCore --------------------
 class TrendencyCore:
     """

@@ -12,6 +12,8 @@ TXT_DIR = os.path.join(BASED_PATH, "Full_data_Report")
 
 os.makedirs(CSV_DIR, exist_ok=True)
 os.makedirs(TXT_DIR, exist_ok=True)
+
+
 # -------------------- Vision core --------------------
 class VisionCore:
     """
@@ -226,16 +228,22 @@ class VisionCore:
 
             # ---------- Record target data report ----------
             data_report = {
-                "shape": self.source_data.shape, # Data shape
-                "head_5": self.source_data.head(), # First 5 rows of data
-                "tail_5": self.source_data.tail(), # Last 5 rows of data
-                "sampling_10_rows": self.source_data.sample( # Sampling 10 rows of data
+                "shape": self.source_data.shape,  # Data shape
+                "head_5": self.source_data.head(),  # First 5 rows of data
+                "tail_5": self.source_data.tail(),  # Last 5 rows of data
+                "sampling_10_rows": self.source_data.sample(  # Sampling 10 rows of data
                     n=min(10, len(self.source_data)), random_state=42
                 ),
-                "info": buffer.getvalue(), # Data info.
-                "memory_usage_byte": self.source_data.memory_usage(deep=True), # Data memory usage
-                "dtype_amount": self.source_data.dtypes.astype(str).value_counts(), # List each data type's amount
-                "unique_values_per_column": self.source_data.nunique(dropna=False), # Unique amount
+                "info": buffer.getvalue(),  # Data info.
+                "memory_usage_byte": self.source_data.memory_usage(
+                    deep=True
+                ),  # Data memory usage
+                "dtype_amount": self.source_data.dtypes.astype(
+                    str
+                ).value_counts(),  # List each data type's amount
+                "unique_values_per_column": self.source_data.nunique(
+                    dropna=False
+                ),  # Unique amount
                 "numeric_description": numeric_description,
                 "non_numeric_description": non_numeric_description,
             }
@@ -449,7 +457,7 @@ class VisionCore:
 
         # ---------- Select rows by index labels ----------
         if index is not None:
-            inspected_data = inspected_data.loc[index] # Get data by selected index
+            inspected_data = inspected_data.loc[index]  # Get data by selected index
 
         # ---------- Select columns ----------
         if column is not None:
@@ -458,11 +466,13 @@ class VisionCore:
                 print(f"⚠️ Columns not found: {missing_cols} ‼️")
                 return None
 
-            inspected_data = inspected_data[column] # Get data by selected columns
+            inspected_data = inspected_data[column]  # Get data by selected columns
 
         # ---------- Ensure selected data is DataFrame ----------
         if isinstance(inspected_data, pd.Series):
-            inspected_data = inspected_data.to_frame() # Turn into DataFrame format to record as report
+            inspected_data = (
+                inspected_data.to_frame()
+            )  # Turn into DataFrame format to record as report
 
         # ---------- Selected data report ----------
         selected_data_report = {

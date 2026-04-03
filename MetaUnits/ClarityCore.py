@@ -12,6 +12,8 @@ CLEANED_DIR = os.path.join(BASED_PATH, "Cleaned_Dataset")
 
 os.makedirs(CSV_DIR, exist_ok=True)
 os.makedirs(CLEANED_DIR, exist_ok=True)
+
+
 # -------------------- Clarity core --------------------
 class ClarityCore:
     """
@@ -525,7 +527,9 @@ class ClarityCore:
 
         # ---------- Build condition mask ----------
         if target_columns is None:
-            row_mask = self.cleaned_data.isin(drop_values).any(axis=1) # Check dropped value in each row direction
+            row_mask = self.cleaned_data.isin(drop_values).any(
+                axis=1
+            )  # Check dropped value in each row direction
         else:
             # ---------- Check missing columns ----------
             missing_cols = [
@@ -983,7 +987,7 @@ class ClarityCore:
         if target_columns is None:
             cleaning_data = self.cleaned_data.dropna(how=how).copy()  # All columns
         else:
-            cleaning_data = self.cleaned_data.dropna( # Certain columns
+            cleaning_data = self.cleaned_data.dropna(  # Certain columns
                 subset=target_columns, how=how
             ).copy()  # Selected columns
 
@@ -1213,7 +1217,9 @@ class ClarityCore:
             # ---------- Fill values for selected columns ----------
             cleaning_data = self.cleaned_data.copy()
             before_missing = cleaning_data[target_columns].isna().sum().sum()
-            cleaning_data[target_columns] = cleaning_data[target_columns].fillna( # Fill value to certain columns
+            cleaning_data[target_columns] = cleaning_data[
+                target_columns
+            ].fillna(  # Fill value to certain columns
                 fill_value
             )
             after_missing = cleaning_data[target_columns].isna().sum().sum()
@@ -1318,7 +1324,10 @@ class ClarityCore:
         # ---------- Auto select string-like columns ----------
         if target_columns is None:
             target_columns = self.cleaned_data.select_dtypes(
-                include=["object", "string"] # Filter "object-" and "string-" type column
+                include=[
+                    "object",
+                    "string",
+                ]  # Filter "object-" and "string-" type column
             ).columns.tolist()
 
             # ---------- Check string-like columns in all data ----------

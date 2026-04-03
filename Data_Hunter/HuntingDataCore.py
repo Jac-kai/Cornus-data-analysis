@@ -4,6 +4,8 @@ import os
 import pandas as pd
 
 WORKSPACE_PATH = os.getcwd()
+
+
 # -------------------- Hunting data core --------------------
 class HuntingDataCore:
     """
@@ -261,8 +263,10 @@ class HuntingDataCore:
         # ---------- Get directories from working place ----------
         self.current_working_place = [
             item
-            for item in os.listdir(WORKSPACE_PATH) # List the directories
-            if os.path.isdir(os.path.join(WORKSPACE_PATH, item)) # Filtering only directories
+            for item in os.listdir(WORKSPACE_PATH)  # List the directories
+            if os.path.isdir(
+                os.path.join(WORKSPACE_PATH, item)
+            )  # Filtering only directories
         ]
 
         # ---------- Record directories as dictionary ----------
@@ -300,8 +304,8 @@ class HuntingDataCore:
         """
 
         # ---------- Ensure folder list is ready ----------
-        if not self.current_wp_dir: # No directories recorded currently
-            self.working_place_searcher() # Back to working place searcher
+        if not self.current_wp_dir:  # No directories recorded currently
+            self.working_place_searcher()  # Back to working place searcher
 
         # ---------- Validate selected folder number ----------
         if selected_folder_num not in self.current_wp_dir:
@@ -309,13 +313,17 @@ class HuntingDataCore:
 
         # ---------- Record selected folder ----------
         self.selected_folder = self.current_wp_dir[selected_folder_num]
-        self.current_folder_path = os.path.join(WORKSPACE_PATH, self.selected_folder) # Join full path of selected folder
+        self.current_folder_path = os.path.join(
+            WORKSPACE_PATH, self.selected_folder
+        )  # Join full path of selected folder
 
         # ---------- Record files from selected folder ----------
         self.files_from_selected_folder = [
             file
-            for file in os.listdir(self.current_folder_path) # List selected folder
-            if os.path.isfile(os.path.join(self.current_folder_path, file)) # Filtering only files
+            for file in os.listdir(self.current_folder_path)  # List selected folder
+            if os.path.isfile(
+                os.path.join(self.current_folder_path, file)
+            )  # Filtering only files
         ]
 
         # ---------- Build file index dictionary ----------
@@ -325,7 +333,7 @@ class HuntingDataCore:
 
         # ---------- Return file list ----------
         if selected_file_num is None:
-            return self.file_list # No file selected
+            return self.file_list  # No file selected
 
         # ---------- Validate selected file number ----------
         if selected_file_num not in self.file_list:
@@ -337,7 +345,7 @@ class HuntingDataCore:
             self.current_folder_path, self.selected_file
         )
 
-        return self.current_file_path # Full path of selected file
+        return self.current_file_path  # Full path of selected file
 
     # -------------------- Loading file to open target data --------------------
     def opener(
@@ -519,7 +527,9 @@ class HuntingDataCore:
                 if html_table_index < 0 or html_table_index >= len(html_tables):
                     raise ValueError("⚠️ html_table_index is out of range ‼️")
 
-                self.target_data = html_tables[html_table_index] # Using table index to select target data
+                self.target_data = html_tables[
+                    html_table_index
+                ]  # Using table index to select target data
 
                 if usecols is not None:
                     self.target_data = self.target_data[usecols]
