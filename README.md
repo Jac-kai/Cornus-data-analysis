@@ -50,6 +50,7 @@ Handles preprocessing operations such as:
 - removing duplicates
 - trimming string whitespace
 - replacing target values
+- automatically saving the latest cleaned dataset as a CSV file when in-place updates are applied
 
 ### 4. Data Computation
 Handles arithmetic operations, derived columns, grouped summaries, and conditional calculations.
