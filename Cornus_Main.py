@@ -15,7 +15,7 @@ from Cornus.Cornus_Menu2 import clarity_data_menu
 from Cornus.Cornus_Menu3 import compution_data_menu
 from Cornus.Cornus_Menu4 import transviewing_data_menu
 from Cornus.Cornus_Menu5 import data_trendency_menu
-from Cornus.Curnus_Logging import cornus_init_logging
+from Cornus.Cornus_Logging import cornus_init_logging
 from Cornus.Menu_Helper_Decorator import input_int
 
 logger = logging.getLogger("Cornus")
